@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ПЕНКА — экспресс-автомойка</title>
+<meta name="description" content="Автоматическая мойка за 15 минут без записи. 12 постов, работаем круглосуточно, тарифы от 450 ₽. Концепт-сайт автомойки.">
+<meta name="theme-color" content="#2448ff">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ПЕНКА — мойка за 15 минут">
+<meta property="og:description" content="Без записи, 12 постов, круглосуточно. Тарифы от 450 ₽.">
+<meta property="og:image" content="img/tunnel-1600.webp">
+<meta property="og:locale" content="ru_RU">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="modulepreload" href="vendor/three.module.min.js">
+<link rel="modulepreload" href="js/car.js">
+<script type="importmap">{"imports":{"three":"./vendor/three.module.min.js"}}</script>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"AutoWash","name":"ПЕНКА (демо)","description":"Концепт-сайт экспресс-автомойки. Компания вымышлена.","telephone":"+7 000 000-00-00","address":{"@type":"PostalAddress","streetAddress":"пр. Условный, 40","addressLocality":"Город","addressCountry":"RU"},"openingHours":"Mo-Su 00:00-23:59","priceRange":"₽"}
+</script>
+<style>
+:root {
+  /* Синий моечный бокс, жёлтые щётки, белая пена.
+     Сетка: крупный заголовок слева, справа живая 3D-мойка; дальше плотные блоки с цифрами. */
+  --paper: #eef2fb;
+  --card: #ffffff;
+  --ink: #0f1a3d;
+  --muted: #5a6588;
+  --blue: #2448ff;
+  --blue-d: #1a35c9;
+  --sun: #ffcf33;
+  --mist: #dbe3ff;
+  --line: #d3dbf2;
+  --display: "Dela Gothic One", "Arial Black", Impact, sans-serif;
+  --body: "Onest", "Segoe UI", system-ui, sans-serif;
+  --gut: clamp(16px, 4.5vw, 64px);
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 400 17px/1.55 var(--body); -webkit-font-smoothing: antialiased; }
+img { max-width: 100%; display: block; height: auto; }
+a { color: inherit; }
+h1, h2, h3 { margin: 0; text-wrap: balance; }
+h1, h2 { font-family: var(--display); font-weight: 400; letter-spacing: -0.01em; }
+p { margin: 0; }
+:focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; border-radius: 6px; }
+
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: .5em; min-height: 52px; padding: 0 24px; border-radius: 16px; font: 600 16px/1 var(--body); text-decoration: none; border: 0; cursor: pointer; transition: transform .15s, box-shadow .2s, background .2s; }
+.btn:active { transform: translateY(2px); }
+.btn-sun { background: var(--sun); color: var(--ink); box-shadow: 0 4px 0 #d9a800; }
+.btn-sun:active { box-shadow: 0 2px 0 #d9a800; }
+.btn-blue { background: var(--blue); color: #fff; box-shadow: 0 4px 0 var(--blue-d); }
+.btn-blue:active { box-shadow: 0 2px 0 var(--blue-d); }
+.btn-line { background: transparent; color: var(--ink); box-shadow: inset 0 0 0 2px var(--ink); }
+
+/* Шапка */
+.top { position: sticky; top: 0; z-index: 50; display: flex; align-items: center; gap: 24px; padding: 12px var(--gut); background: rgba(238,242,251,.96); border-bottom: 1px solid transparent; transition: border-color .3s; }
+.top.solid { border-color: var(--line); }
+.logo { display: flex; align-items: center; gap: 10px; text-decoration: none; font: 400 24px/1 var(--display); letter-spacing: .01em; }
+.logo i { width: 30px; height: 30px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff 0 18%, var(--mist) 19% 60%, var(--blue) 61%); position: relative; }
+.logo i::after { content: ""; position: absolute; width: 12px; height: 12px; right: -6px; top: -4px; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff 0 22%, var(--mist) 23% 60%, var(--blue) 61%); }
+.nav { display: flex; gap: 24px; margin-left: 12px; }
+.nav a { text-decoration: none; font-weight: 500; font-size: 15px; color: var(--muted); }
+.nav a:hover { color: var(--ink); }
+.live { text-decoration: none; margin-left: auto; display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; background: var(--card); border-radius: 999px; font-size: 14px; font-weight: 500; white-space: nowrap; }
+.live b { font-variant-numeric: tabular-nums; }
+.live::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: #18c26b; box-shadow: 0 0 0 0 rgba(24,194,107,.5); animation: ping 2s infinite; }
+@keyframes ping { 70% { box-shadow: 0 0 0 8px rgba(24,194,107,0); } 100% { box-shadow: 0 0 0 0 rgba(24,194,107,0); } }
+.top .btn { min-height: 44px; }
+
+/* Первый экран */
+.hero { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(20px, 3vw, 44px); padding: clamp(20px, 3vw, 40px) var(--gut) 0; align-items: stretch; }
+.hero-text { display: flex; flex-direction: column; justify-content: center; padding: 20px 0 30px; }
+.hero h1 { font-size: clamp(2.5rem, 5.5vw, 5.6rem); line-height: .96; }
+.hero h1 .l2 { display: block; color: var(--blue); }
+.hero .lead { margin-top: 24px; font-size: clamp(17px, 1.5vw, 20px); color: var(--muted); max-width: 30rem; }
+.hero .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+.kpis { display: grid; grid-template-columns: repeat(3, auto); justify-content: start; gap: 8px 28px; margin: 36px 0 0; }
+.kpis div { display: grid; }
+.kpis dt { order: 2; color: var(--muted); font-size: 14px; }
+.kpis dd { margin: 0; font: 400 clamp(1.5rem, 2.4vw, 2rem)/1.1 var(--display); }
+
+.wash { position: relative; border-radius: 32px; overflow: hidden; background: radial-gradient(120% 90% at 70% 10%, #4d6bff 0%, var(--blue) 45%, #1730b8 100%); min-height: 560px; display: flex; flex-direction: column; isolation: isolate; }
+.wash canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 0; }
+.wash .fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: none; }
+.no-gl .wash .fallback { display: block; }
+.wash-top { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 22px 24px; color: #fff; pointer-events: none; }
+.wash-top .tag { background: rgba(255,255,255,.2); padding: 8px 14px; border-radius: 999px; font-size: 14px; font-weight: 500; }
+.meter { font: 400 clamp(2rem, 4vw, 3.4rem)/1 var(--display); text-align: right; font-variant-numeric: tabular-nums; }
+.meter small { display: block; font: 500 13px var(--body); opacity: .8; margin-top: 6px; }
+.slider { position: relative; z-index: 1; margin-top: auto; padding: 18px 22px 22px; display: grid; gap: 10px; color: #fff; }
+.slider label { font-weight: 600; font-size: 15px; display: flex; justify-content: space-between; }
+.slider label span { opacity: .8; font-weight: 500; }
+input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 56px; background: transparent; cursor: grab; touch-action: pan-y; }
+input[type="range"]::-webkit-slider-runnable-track { height: 12px; border-radius: 999px; background: linear-gradient(90deg, var(--sun) var(--p, 0%), rgba(255,255,255,.25) var(--p, 0%)); }
+input[type="range"]::-moz-range-track { height: 12px; border-radius: 999px; background: rgba(255,255,255,.25); }
+input[type="range"]::-moz-range-progress { height: 12px; border-radius: 999px; background: var(--sun); }
+input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 44px; height: 44px; margin-top: -16px; border-radius: 50%; background: #fff; border: 4px solid var(--sun); box-shadow: 0 6px 16px rgba(0,0,0,.25); }
+input[type="range"]::-moz-range-thumb { width: 36px; height: 36px; border-radius: 50%; background: #fff; border: 4px solid var(--sun); box-shadow: 0 6px 16px rgba(0,0,0,.25); }
+input[type="range"]:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+
+/* Бегущая строка */
+.ticker { margin-top: clamp(28px, 4vw, 48px); background: var(--ink); color: #fff; overflow: hidden; white-space: nowrap; padding: 16px 0; font: 400 clamp(18px, 2vw, 24px)/1 var(--display); }
+.ticker div { display: inline-flex; gap: 40px; padding-right: 40px; animation: run 32s linear infinite; }
+.ticker span { display: inline-flex; align-items: center; gap: 40px; }
+.ticker span::after { content: ""; width: 14px; height: 14px; border-radius: 50%; background: var(--sun); }
+@keyframes run { to { transform: translateX(-100%); } }
+
+.sec { padding: clamp(70px, 9vw, 130px) var(--gut); }
+.sec-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 18px 40px; margin-bottom: clamp(28px, 4vw, 52px); }
+.sec-head h2 { font-size: clamp(2rem, 4.6vw, 4rem); line-height: 1; max-width: 16ch; }
+.sec-head p { color: var(--muted); max-width: 28rem; }
+
+/* Как это работает */
+.how { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; counter-reset: s; list-style: none; margin: 0; padding: 0; }
+.how li { background: var(--card); border-radius: 28px; overflow: hidden; display: flex; flex-direction: column; }
+.how img { aspect-ratio: 4 / 3; object-fit: cover; width: 100%; }
+.how .t { padding: 22px 24px 26px; display: grid; gap: 8px; }
+.how .n { font: 400 15px/1 var(--display); color: var(--blue); }
+.how h3 { font-size: 1.3rem; font-weight: 700; }
+.how p { color: var(--muted); font-size: 16px; }
+
+/* Тарифы */
+.seg { display: inline-flex; background: var(--card); padding: 5px; border-radius: 16px; gap: 4px; }
+.seg button { all: unset; cursor: pointer; padding: 11px 18px; border-radius: 12px; font-weight: 600; font-size: 15px; color: var(--muted); transition: background .2s, color .2s; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: #fff; }
+.seg button:focus-visible { outline: 3px solid var(--blue); }
+.tariffs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 22px; align-items: stretch; }
+.tariff { background: var(--card); border-radius: 28px; padding: 30px 28px; display: flex; flex-direction: column; gap: 18px; }
+.tariff.hot { background: var(--blue); color: #fff; }
+.tariff.hot .muted, .tariff.hot li.no { color: #c3ceff; }
+.tariff h3 { font: 400 1.6rem/1 var(--display); }
+.tariff .price { font: 400 clamp(2.6rem, 4.5vw, 3.6rem)/1 var(--display); font-variant-numeric: tabular-nums; }
+.tariff .price small { font: 600 18px var(--body); margin-left: 4px; }
+.muted { color: var(--muted); font-size: 15px; }
+.tariff ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; flex: 1; }
+.tariff li { padding-left: 30px; position: relative; font-size: 16px; }
+.tariff li::before { content: ""; position: absolute; left: 0; top: 2px; width: 20px; height: 20px; border-radius: 50%; background: var(--sun); }
+.tariff li::after { content: ""; position: absolute; left: 6px; top: 7px; width: 8px; height: 4px; border-left: 2px solid var(--ink); border-bottom: 2px solid var(--ink); transform: rotate(-45deg); }
+.tariff li.no { color: var(--muted); text-decoration: line-through; text-decoration-color: rgba(90,101,136,.5); }
+.tariff li.no::before { background: var(--mist); }
+.tariff li.no::after { display: none; }
+.tariff.hot .btn-sun { box-shadow: 0 4px 0 #c99a00; }
+
+/* Конструктор */
+.builder { display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 16px; }
+.opts { border: 0; margin: 0; min-width: 0; background: var(--card); border-radius: 28px; padding: clamp(20px, 3vw, 34px); display: grid; gap: 10px; }
+.opt { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 16px; padding: 14px 16px; border-radius: 18px; border: 2px solid var(--line); cursor: pointer; transition: border-color .2s, background .2s; }
+.opt:hover { border-color: #b9c6ee; }
+.opt input { appearance: none; width: 26px; height: 26px; border-radius: 8px; border: 2px solid #b9c6ee; margin: 0; display: grid; place-items: center; transition: background .2s, border-color .2s; cursor: pointer; }
+.opt input:checked { background: var(--blue); border-color: var(--blue); }
+.opt input:checked::after { content: ""; width: 10px; height: 5px; border-left: 2.5px solid #fff; border-bottom: 2.5px solid #fff; transform: translateY(-1px) rotate(-45deg); }
+.opt input:focus-visible { outline: 3px solid var(--blue); outline-offset: 2px; }
+.opt:has(input:checked) { border-color: var(--blue); background: #f4f6ff; }
+.opt b { display: block; font-weight: 600; }
+.opt small { color: var(--muted); font-size: 14px; }
+.opt .pr { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.total { background: var(--ink); color: #fff; border-radius: 28px; padding: clamp(24px, 3vw, 36px); display: flex; flex-direction: column; gap: 18px; position: sticky; top: 92px; align-self: start; }
+.total .sum { font: 400 clamp(3rem, 6vw, 5rem)/1 var(--display); font-variant-numeric: tabular-nums; }
+.total .row { display: flex; justify-content: space-between; color: #b9c3e6; font-size: 15px; }
+.total .row b { color: #fff; font-variant-numeric: tabular-nums; }
+.bar { height: 10px; border-radius: 999px; background: rgba(255,255,255,.14); overflow: hidden; }
+.bar i { display: block; height: 100%; width: 30%; background: var(--sun); border-radius: inherit; transition: width .5s cubic-bezier(.2,.8,.2,1); }
+
+/* Абонемент */
+.sub { margin: 0 var(--gut); border-radius: 36px; background: var(--sun); padding: clamp(32px, 5vw, 64px); display: grid; grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); gap: 24px 48px; align-items: center; position: relative; overflow: hidden; }
+.sub h2 { font-size: clamp(2rem, 4.4vw, 3.8rem); line-height: 1; }
+.sub p { margin-top: 16px; max-width: 34rem; font-size: 18px; }
+.sub .card { background: var(--ink); color: #fff; border-radius: 26px; padding: 28px; display: grid; gap: 14px; transform: rotate(-2deg); box-shadow: 0 30px 50px rgba(15,26,61,.25); }
+.sub .card .price { font: 400 3rem/1 var(--display); }
+.sub .card .price small { font: 600 17px var(--body); opacity: .7; }
+.bubbles { position: absolute; inset: 0; pointer-events: none; }
+
+/* Табло постов */
+.board { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; }
+.post { background: var(--card); border-radius: 20px; padding: 16px; display: grid; gap: 6px; min-height: 118px; border: 2px solid transparent; transition: border-color .3s, background .3s; }
+.post .num { font: 400 1.4rem/1 var(--display); }
+.post .st { font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+.post .st::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #18c26b; }
+.post.busy .st::before { background: #ff8a1f; }
+.post .eta { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.post.free { border-color: #bfeed5; }
+.post .pg { height: 6px; border-radius: 999px; background: var(--mist); overflow: hidden; margin-top: auto; }
+.post .pg i { display: block; height: 100%; background: var(--blue); border-radius: inherit; transition: width 1s linear; }
+.legend { margin-top: 14px; color: var(--muted); font-size: 14px; }
+
+/* Галерея */
+.gallery { display: flex; gap: 14px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 0 var(--gut) 12px; scrollbar-width: thin; }
+.gallery figure { margin: 0; flex: 0 0 clamp(260px, 32vw, 460px); scroll-snap-align: start; border-radius: 26px; overflow: hidden; position: relative; background: var(--mist); }
+.gallery img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+.gallery figcaption { position: absolute; left: 14px; bottom: 14px; background: var(--card); padding: 7px 12px; border-radius: 12px; font-size: 14px; font-weight: 600; }
+
+/* Отзывы и вопросы */
+.reviews { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.review { margin: 0; background: var(--card); border-radius: 26px; padding: 26px; display: flex; flex-direction: column; gap: 16px; }
+.review blockquote { margin: 0; font-size: 17px; }
+.review figcaption { margin-top: auto; color: var(--muted); font-size: 14px; display: flex; align-items: center; gap: 10px; }
+.review figcaption i { width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; background: var(--mist); color: var(--blue); font-style: normal; font-weight: 700; }
+.note { color: var(--muted); font-size: 14px; margin-top: 16px; }
+.faq { display: grid; gap: 10px; max-width: 56rem; }
+.faq details { background: var(--card); border-radius: 20px; padding: 0 22px; }
+.faq summary { list-style: none; cursor: pointer; padding: 20px 40px 20px 0; font-weight: 600; font-size: 18px; position: relative; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; position: absolute; right: 0; top: 50%; transform: translateY(-50%); width: 30px; height: 30px; border-radius: 50%; background: var(--mist); color: var(--blue); display: grid; place-items: center; font-size: 20px; transition: transform .3s; }
+.faq details[open] summary::after { transform: translateY(-50%) rotate(45deg); }
+.faq details p { color: var(--muted); padding-bottom: 20px; }
+
+/* Контакты */
+.contacts { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: 16px; }
+.info { background: var(--card); border-radius: 28px; padding: clamp(24px, 3vw, 36px); display: grid; gap: 20px; align-content: start; }
+.info dt { color: var(--muted); font-size: 14px; }
+.info dd { margin: 2px 0 0; font-size: 19px; font-weight: 600; }
+.info dd a { text-decoration: none; }
+.map { border-radius: 28px; overflow: hidden; background: var(--mist); min-height: 380px; }
+.map svg { width: 100%; height: 100%; display: block; }
+
+footer { padding: 36px var(--gut) calc(36px + env(safe-area-inset-bottom)); display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 40px; color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); }
+footer p { max-width: 48rem; }
+.mbar { display: none; }
+
+@media (max-width: 1100px) {
+  .nav { display: none; }
+  .board { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 900px) {
+  .hero, .builder, .sub, .contacts { grid-template-columns: 1fr; }
+  .wash { min-height: 0; aspect-ratio: 4 / 5; }
+  .how, .tariffs, .reviews { grid-template-columns: 1fr; }
+  .how li { display: grid; grid-template-columns: 38% 1fr; }
+  .how img { height: 100%; aspect-ratio: auto; }
+  .total { position: static; }
+  .sub .card { transform: none; }
+  .top .btn { display: none; }
+}
+@media (max-width: 600px) {
+  body { font-size: 16px; }
+  .live { font-size: 13px; padding: 7px 12px; }
+  .board { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .post { min-height: 104px; padding: 12px; }
+  .how li { grid-template-columns: 1fr; }
+  .how img { aspect-ratio: 16 / 9; }
+  .kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px 14px; }
+  .wash { border-radius: 26px; margin: 0 calc(var(--gut) * -0.5); }
+  .mbar { display: flex; gap: 10px; position: fixed; inset: auto 0 0 0; z-index: 40; padding: 10px 12px calc(10px + env(safe-area-inset-bottom)); background: rgba(238,242,251,.97); border-top: 1px solid var(--line); }
+  .mbar .btn { flex: 1; min-height: 48px; }
+  footer { padding-bottom: calc(100px + env(safe-area-inset-bottom)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+<header class="top" id="top">
+  <a class="logo" href="#main" aria-label="ПЕНКА, на главную"><i aria-hidden="true"></i>пенка</a>
+  <nav class="nav" aria-label="Разделы">
+    <a href="#how">Как это работает</a>
+    <a href="#tariffs">Тарифы</a>
+    <a href="#builder">Конструктор</a>
+    <a href="#posts">Свободные посты</a>
+    <a href="#where">Адрес</a>
+  </nav>
+  <a class="live" href="#posts" id="livePill">Свободно постов: <b id="freeCount">4</b></a>
+  <a class="btn btn-blue" href="#where">Проложить маршрут</a>
+</header>
+
+<main id="main">
+  <section class="hero" aria-labelledby="h1">
+    <div class="hero-text">
+      <h1 id="h1">Чистая машина<span class="l2">за 15 минут</span></h1>
+      <p class="lead">Автоматическая мойка без записи и очереди у кассы. Заезжаете на свободный пост, платите по QR, щётки и пена делают остальное.</p>
+      <div class="cta">
+        <a class="btn btn-sun" href="#tariffs">Выбрать тариф</a>
+        <a class="btn btn-line" href="#posts">Где свободно</a>
+      </div>
+      <dl class="kpis">
+        <div><dt>поста</dt><dd>12</dd></div>
+        <div><dt>от рубля</dt><dd>450</dd></div>
+        <div><dt>без перерыва</dt><dd>24/7</dd></div>
+      </dl>
+    </div>
+    <div class="wash" id="wash">
+      <img class="fallback" src="img/tunnel-1600.webp" alt="Машина в автоматической мойке" width="1600" height="1140">
+      <canvas id="gl" role="img" aria-label="3D-машина проходит через моечную рамку"></canvas>
+      <div class="wash-top">
+        <span class="tag">Сдвиньте ползунок</span>
+        <div class="meter"><span id="cleanPct">0</span>%<small>машины уже чистые</small></div>
+      </div>
+      <div class="slider">
+        <label for="washRange">Помыть машину <span id="washHint">тяните вправо</span></label>
+        <input type="range" id="washRange" min="0" max="100" value="0" step="0.1" aria-valuetext="Чистота 0 процентов">
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker" aria-hidden="true"><div><span>Активная пена</span><span>Мягкие щётки</span><span>Горячий воск</span><span>Сушка тёплым воздухом</span><span>Чернение шин</span><span>Мойка днища</span><span>Пылесосы на парковке</span></div><div><span>Активная пена</span><span>Мягкие щётки</span><span>Горячий воск</span><span>Сушка тёплым воздухом</span><span>Чернение шин</span><span>Мойка днища</span><span>Пылесосы на парковке</span></div></div>
+
+  <section class="sec" id="how" aria-labelledby="how-h">
+    <div class="sec-head"><h2 id="how-h">Три шага до чистой машины</h2><p>Касса не нужна: пост сам считывает номер и предлагает тарифы на экране.</p></div>
+    <ol class="how">
+      <li><img src="img/tunnel-800.webp" srcset="img/tunnel-800.webp 800w, img/tunnel-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 33vw" alt="Машина въезжает в моечный тоннель" width="800" height="570" loading="lazy" decoding="async"><div class="t"><span class="n">Шаг 1</span><h3>Заезжаете на свободный пост</h3><p>Зелёная лампа над воротами означает, что можно заезжать. Свободные посты видно и на этой странице.</p></div></li>
+      <li><img src="img/foam-sedan-800.webp" srcset="img/foam-sedan-800.webp 800w, img/foam-sedan-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 33vw" alt="Седан покрыт активной пеной" width="800" height="530" loading="lazy" decoding="async"><div class="t"><span class="n">Шаг 2</span><h3>Выбираете тариф на экране</h3><p>Оплата по QR-коду, картой или с баланса абонемента. Чек придёт на телефон.</p></div></li>
+      <li><img src="img/vacuum-white-800.webp" srcset="img/vacuum-white-800.webp 800w, img/vacuum-white-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 33vw" alt="Пылесос для салона на площадке" width="800" height="533" loading="lazy" decoding="async"><div class="t"><span class="n">Шаг 3</span><h3>Через 15 минут уезжаете</h3><p>На парковке после мойки бесплатные пылесосы и салфетки для стёкол.</p></div></li>
+    </ol>
+  </section>
+
+  <section class="sec" id="tariffs" aria-labelledby="tar-h" style="padding-top:0">
+    <div class="sec-head"><h2 id="tar-h">Тарифы</h2><p>Для кроссоверов и внедорожников цена чуть выше: машину дольше обрабатывают щётки и сушка.</p></div>
+    <div class="seg" role="group" aria-label="Тип кузова" id="cls">
+      <button aria-pressed="true" data-i="0">Легковой</button>
+      <button aria-pressed="false" data-i="1">Кроссовер</button>
+      <button aria-pressed="false" data-i="2">Внедорожник</button>
+    </div>
+    <div class="tariffs">
+      <article class="tariff">
+        <h3>Экспресс</h3>
+        <div class="price" data-p="450,550,650"><span>450</span><small>₽</small></div>
+        <p class="muted">10 минут</p>
+        <ul><li>Активная пена</li><li>Мягкие щётки</li><li>Ополаскивание</li><li class="no">Воск</li><li class="no">Мойка днища</li></ul>
+        <button class="btn btn-line" data-pick="0">Собрать на основе</button>
+      </article>
+      <article class="tariff hot">
+        <h3>Стандарт</h3>
+        <div class="price" data-p="750,890,990"><span>750</span><small>₽</small></div>
+        <p class="muted">15 минут · выбирают 6 из 10</p>
+        <ul><li>Всё из «Экспресса»</li><li>Горячий воск</li><li>Сушка тёплым воздухом</li><li>Чернение шин</li><li class="no">Мойка днища</li></ul>
+        <button class="btn btn-sun" data-pick="1">Собрать на основе</button>
+      </article>
+      <article class="tariff">
+        <h3>Максимум</h3>
+        <div class="price" data-p="1200,1400,1600"><span>1 200</span><small>₽</small></div>
+        <p class="muted">20 минут</p>
+        <ul><li>Всё из «Стандарта»</li><li>Мойка днища и арок</li><li>Полимерная защита</li><li>Антидождь на лобовое</li><li>Двойная сушка</li></ul>
+        <button class="btn btn-line" data-pick="2">Собрать на основе</button>
+      </article>
+    </div>
+  </section>
+
+  <section class="sec" id="builder" aria-labelledby="bld-h" style="padding-top:0">
+    <div class="sec-head"><h2 id="bld-h">Соберите свою мойку</h2><p>Отметьте нужное, и мы покажем цену и время. Такой же набор можно выбрать на экране поста.</p></div>
+    <div class="builder">
+      <fieldset class="opts" id="opts">
+        <legend class="muted" style="padding:0 0 8px">Основа: <b id="baseName" style="color:var(--ink)">Стандарт</b></legend>
+        <label class="opt"><input type="checkbox" data-p="200" data-m="3"><span><b>Мойка днища и арок</b><small>Смывает реагенты зимой</small></span><span class="pr">+200 ₽</span></label>
+        <label class="opt"><input type="checkbox" data-p="250" data-m="2"><span><b>Антидождь</b><small>На лобовое и боковые стёкла</small></span><span class="pr">+250 ₽</span></label>
+        <label class="opt"><input type="checkbox" data-p="300" data-m="3"><span><b>Полимерная защита кузова</b><small>Держится до 3 недель</small></span><span class="pr">+300 ₽</span></label>
+        <label class="opt"><input type="checkbox" data-p="150" data-m="2"><span><b>Очистка дисков</b><small>Кислотный состав без вреда для лака</small></span><span class="pr">+150 ₽</span></label>
+        <label class="opt"><input type="checkbox" data-p="350" data-m="10"><span><b>Пылесос салона с оператором</b><small>Сиденья, коврики, багажник</small></span><span class="pr">+350 ₽</span></label>
+      </fieldset>
+      <aside class="total" aria-live="polite">
+        <span style="color:#b9c3e6">К оплате на посту</span>
+        <div class="sum"><span id="sum">750</span> ₽</div>
+        <div class="row"><span>Время</span><b id="mins">15 мин</b></div>
+        <div class="bar" aria-hidden="true"><i id="minsBar"></i></div>
+        <div class="row"><span>Бонусы на счёт</span><b id="bonus">+38</b></div>
+        <a class="btn btn-sun" href="#where">Поехать мыться</a>
+      </aside>
+    </div>
+  </section>
+
+  <section class="sub" aria-labelledby="sub-h">
+    <canvas class="bubbles" id="bubbles" aria-hidden="true"></canvas>
+    <div style="position:relative">
+      <h2 id="sub-h">Безлимитная мойка на месяц</h2>
+      <p>Мойте машину хоть каждый день, по тарифу «Стандарт». Абонемент привязывается к номеру, пост узнаёт машину сам.</p>
+    </div>
+    <div class="card" style="position:relative">
+      <span class="muted" style="color:#b9c3e6">Абонемент «Каждый день»</span>
+      <div class="price">2 490 <small>₽ / мес</small></div>
+      <span style="color:#b9c3e6">Окупается с четвёртой мойки</span>
+      <a class="btn btn-sun" href="#where">Оформить на посту</a>
+    </div>
+  </section>
+
+  <section class="sec" id="posts" aria-labelledby="posts-h">
+    <div class="sec-head"><h2 id="posts-h">Свободные посты прямо сейчас</h2><p>Табло обновляется каждые несколько секунд. Зелёный пост свободен, можно заезжать.</p></div>
+    <div class="board" id="board" aria-live="off"></div>
+    <p class="legend">Демо-данные: в концепте загрузка постов имитируется.</p>
+  </section>
+
+  <section aria-label="Фото мойки" style="padding-bottom:clamp(60px,8vw,110px)">
+    <div class="gallery" tabindex="0" aria-label="Галерея, листайте вбок">
+      <figure><img src="img/foam-bay-800.webp" alt="Пена на кузове в боксе" width="800" height="533" loading="lazy" decoding="async"><figcaption>Активная пена</figcaption></figure>
+      <figure><img src="img/wheel-sponge-800.webp" alt="Мойка колеса губкой" width="533" height="800" loading="lazy" decoding="async"><figcaption>Диски</figcaption></figure>
+      <figure><img src="img/rinse-bay-800.webp" alt="Ополаскивание машины в боксе" width="800" height="533" loading="lazy" decoding="async"><figcaption>Ополаскивание</figcaption></figure>
+      <figure><img src="img/foam-texture-800.webp" alt="Пена стекает по тёмному кузову" width="533" height="800" loading="lazy" decoding="async"><figcaption>Пена pH 7</figcaption></figure>
+      <figure><img src="img/tunnel-800.webp" alt="Автоматический тоннель" width="800" height="570" loading="lazy" decoding="async"><figcaption>Тоннель</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="sec" aria-labelledby="rev-h" style="padding-top:0">
+    <div class="sec-head"><h2 id="rev-h">Отзывы</h2></div>
+    <div class="reviews">
+      <figure class="review"><blockquote>Заезжаю по дороге на работу, ровно 15 минут. Абонемент окупился уже на второй неделе.</blockquote><figcaption><i>Д</i>Дмитрий, абонемент</figcaption></figure>
+      <figure class="review"><blockquote>Удобно, что на сайте видно свободные посты. Приехала, сразу заехала, без очереди.</blockquote><figcaption><i>А</i>Алина, «Стандарт»</figcaption></figure>
+      <figure class="review"><blockquote>Зимой беру с мойкой днища. Реагентов после неё не видно даже в арках.</blockquote><figcaption><i>С</i>Сергей, «Максимум»</figcaption></figure>
+    </div>
+    <p class="note">Отзывы в демо-версии вымышлены.</p>
+  </section>
+
+  <section class="sec" aria-labelledby="faq-h" style="padding-top:0">
+    <div class="sec-head"><h2 id="faq-h">Вопросы</h2></div>
+    <div class="faq">
+      <details><summary>Щётки не поцарапают лак?</summary><p>Щётки из мягкого вспененного полиэтилена, а перед ними машину обрабатывает пена, которая смывает песок. Для матовых плёнок есть бесконтактный режим.</p></details>
+      <details><summary>Можно ли с багажником на крыше?</summary><p>Да, выберите на экране режим «Без верхней щётки». Высота автомобиля до 2,3 метра.</p></details>
+      <details><summary>Что если мойка не понравилась?</summary><p>Покажите оператору, что не отмылось, и мы бесплатно перемоем машину в течение часа.</p></details>
+      <details><summary>Есть ли туалет и кофе?</summary><p>Есть зона ожидания с кофемашиной и туалетом, но обычно за 15 минут вы даже не успеете выйти из машины.</p></details>
+    </div>
+  </section>
+
+  <section class="sec" id="where" aria-labelledby="where-h" style="padding-top:0">
+    <div class="sec-head"><h2 id="where-h">Как доехать</h2></div>
+    <div class="contacts">
+      <dl class="info">
+        <div><dt>Адрес</dt><dd>пр. Условный, 40, рядом с заправкой</dd></div>
+        <div><dt>Работаем</dt><dd>Круглосуточно, без выходных</dd></div>
+        <div><dt>Телефон</dt><dd><a href="tel:+70000000000">+7 000 000-00-00</a></dd></div>
+        <div><dt>Въезд</dt><dd>С правой полосы, следуйте жёлтым стрелкам</dd></div>
+      </dl>
+      <div class="map" role="img" aria-label="Схема: мойка у проспекта, въезд с правой полосы">
+        <svg viewBox="0 0 700 420" preserveAspectRatio="xMidYMid slice">
+          <rect width="700" height="420" fill="#dbe3ff"/>
+          <g fill="#c8d3fa"><rect x="40" y="40" width="160" height="110" rx="14"/><rect x="230" y="40" width="130" height="110" rx="14"/><rect x="40" y="270" width="160" height="120" rx="14"/><rect x="520" y="40" width="150" height="110" rx="14"/><rect x="520" y="270" width="150" height="120" rx="14"/></g>
+          <path d="M0 210 H700" stroke="#fff" stroke-width="56"/>
+          <path d="M0 210 H700" stroke="#c8d3fa" stroke-width="3" stroke-dasharray="18 14"/>
+          <path d="M440 0 V420" stroke="#fff" stroke-width="40"/>
+          <rect x="230" y="262" width="180" height="128" rx="18" fill="#2448ff"/>
+          <g fill="#ffcf33"><rect x="246" y="280" width="30" height="92" rx="6"/><rect x="286" y="280" width="30" height="92" rx="6"/><rect x="326" y="280" width="30" height="92" rx="6"/><rect x="366" y="280" width="30" height="92" rx="6"/></g>
+          <path d="M120 228 C 200 228, 250 236, 258 262" stroke="#ffcf33" stroke-width="6" fill="none" stroke-linecap="round" stroke-dasharray="1 14"/>
+          <text x="254" y="252" fill="#0f1a3d" font-family="Onest, sans-serif" font-weight="700" font-size="16">ПЕНКА</text>
+          <text x="20" y="200" fill="#5a6588" font-family="Onest, sans-serif" font-size="13">пр. Условный</text>
+        </svg>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>Концепт-сайт для портфолио. Компания, адрес, телефон, отзывы и загрузка постов вымышлены. Фото: Pexels (Tima Miroshnichenko, Jarne Aerts, Kaboompics и другие). 3D-машина и моечная рамка построены кодом.</p>
+  <p>© ПЕНКА, демо</p>
+</footer>
+
+<div class="mbar">
+  <a class="btn btn-line" href="tel:+70000000000">Позвонить</a>
+  <a class="btn btn-blue" href="#where">Маршрут</a>
+</div>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
