@@ -58,9 +58,19 @@ if (hasGL) {
     } catch (e) {
       console.error(e);
       document.documentElement.classList.add('no-gl');
+      if (/[?&]debug/.test(location.search)) showDebug(e);
     }
   });
-} else document.documentElement.classList.add('no-gl');
+} else {
+  document.documentElement.classList.add('no-gl');
+  if (/[?&]debug/.test(location.search)) showDebug(new Error('WebGL недоступен: getContext вернул null'));
+}
+function showDebug(e) {
+  const d = document.createElement('pre');
+  d.style.cssText = 'position:absolute;left:8px;right:8px;top:70px;z-index:5;background:rgba(0,0,0,.8);color:#fff;font:12px/1.35 monospace;padding:10px;border-radius:10px;white-space:pre-wrap;word-break:break-all;max-height:60%;overflow:auto';
+  d.textContent = 'DEBUG: ' + (e && e.message) + '\n' + String((e && e.stack) || '').slice(0, 700) + '\n' + navigator.userAgent;
+  $('#wash').appendChild(d);
+}
 
 // Тарифы и конструктор
 let cls = 0, base = 1;
