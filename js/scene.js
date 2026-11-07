@@ -61,9 +61,16 @@ export function initScene({ canvas, reduced }) {
   let tier = startTier(dev);
   let cfg = TIERS[tier];
   let renderer;
-  try {
-    renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true, powerPreference: 'high-performance', stencil: false });
-  } catch (e) { return null; }
+  // Если устройство не потянуло «красивые» настройки контекста — пробуем самые простые
+  const ctxOpts = [
+    { antialias: true, alpha: true, powerPreference: 'high-performance', stencil: false },
+    { antialias: false, alpha: true, stencil: false },
+    { alpha: true },
+  ];
+  for (const o of ctxOpts) {
+    try { renderer = new THREE.WebGLRenderer({ canvas, ...o }); break; } catch (e) { renderer = null; }
+  }
+  if (!renderer) return null;
   renderer.setClearColor(0x000000, 0);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.0;
@@ -239,6 +246,27 @@ export function initScene({ canvas, reduced }) {
   car.setClearcoat(cfg.cc);
   resize();
   addEventListener('resize', resize);
+  // Размер холста следим не только по resize окна: на телефоне блок меняется при прокрутке адресной строки и подгрузке шрифтов
+  if (typeof ResizeObserver !== 'undefined') new ResizeObserver(() => resize()).observe(canvas);
+  // Если шейдер грязи/пены не скомпилировался на видеокарте, машина не должна исчезать: переключаем кузов на обычные материалы
+  let safeMode = false;
+  renderer.debug.onShaderError = (gl, program, vs, fs) => {
+    console.error('Shader error, switching car to plain materials');
+    if (safeMode) return;
+    safeMode = true;
+    scene.traverse((o) => {
+      const ms = o.material ? (Array.isArray(o.material) ? o.material : [o.material]) : [];
+      ms.forEach((m) => {
+        if (!m.onBeforeCompile || m.isShaderMaterial) return;
+        m.onBeforeCompile = () => {};
+        m.customProgramCacheKey = () => 'plain';
+        if (m.clearcoat !== undefined) m.clearcoat = 0;
+        m.needsUpdate = true;
+      });
+    });
+  };
+  canvas.addEventListener('webglcontextlost', (e) => { e.preventDefault(); document.documentElement.classList.add('no-gl'); });
+  canvas.addEventListener('webglcontextrestored', () => { location.reload(); });
   const go = () => { if (started) return; started = true; requestAnimationFrame(frame); };
   try { renderer.compileAsync(scene, camera).then(go, go); } catch { go(); }
   setTimeout(go, 3000);
